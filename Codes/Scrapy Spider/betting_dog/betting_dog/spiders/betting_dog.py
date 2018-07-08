@@ -1,26 +1,31 @@
 #coding=utf-8
 import scrapy
 import re
+import time
+import random
 
 
 global START_YEAR, END_YEAR, CSV_PATH_EVENTS, CSV_PATH_SCORE, CSV_PATH_SCORE_HOME, CSV_PATH_SCORE_AWAY
 START_YEAR = 2003
-END_YEAR = 2018
+END_YEAR = 2017
 CSV_PATH_EVENTS = '/Users/llx/PyProjects/BettingDog/Data/Game Data/西甲比赛明细.csv'
 CSV_PATH_SCORE = '/Users/llx/PyProjects/BettingDog/Data/Game Data/西甲总积分榜.csv'
 CSV_PATH_SCORE_HOME = '/Users/llx/PyProjects/BettingDog/Data/Game Data/西甲主场积分榜.csv'
 CSV_PATH_SCORE_AWAY = '/Users/llx/PyProjects/BettingDog/Data/Game Data/西甲客场积分榜.csv'
 
 
-class ExampleSpider(scrapy.Spider):
-	name = 'example'
+class BettingDogSpider(scrapy.Spider):
+	name = 'betting_dog'
 
 	# 生成爬取路径
 	start_urls = []
 
-	for yymm_start in range(START_YEAR, END_YEAR):
+	for yymm_start in range(START_YEAR, END_YEAR + 1):
 		yymm_end = yymm_start + 1
-		start_urls.append('http://zq.win007.com/cn/League/%s-%s/31.html' % (yymm_start, yymm_end))
+		url = 'http://zq.win007.com/cn/League/%s-%s/31.html' % (yymm_start, yymm_end)
+		print(url)
+		start_urls.append(url)
+
 
 	def parse(self, response):
 		baseUrl = 'http://zq.win007.com'
@@ -35,7 +40,15 @@ class ExampleSpider(scrapy.Spider):
 
 		# -- 传当前赛季到cral_info()
 		season = js_data.split('/')[3]
-		print(season)
+
+		print('Now crawling season %s ... ' % season)
+
+		# 反爬虫处理机制
+		#seconds = random.randint(3, 10)
+		#for i in range(1, seconds+1):
+		#	print('%s seconds to crawl ...' % (seconds+1 - i))
+		#	time.sleep(1)
+
 		request  = scrapy.Request(baseUrl+js_data, callback=self.crawl_info, meta = {'season':season})
 		yield request
 
