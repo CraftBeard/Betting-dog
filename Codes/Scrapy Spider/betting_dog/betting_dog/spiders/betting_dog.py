@@ -1,8 +1,6 @@
 #coding=utf-8
 import scrapy
 import re
-import time
-import random
 
 
 global START_YEAR, END_YEAR, CSV_PATH_EVENTS, CSV_PATH_SCORE, CSV_PATH_SCORE_HOME, CSV_PATH_SCORE_AWAY
@@ -270,3 +268,4 @@ class BettingDogSpider(scrapy.Spider):
 			f.write(bytes(",".join(title)+"\n",encoding="utf-8"))
 			for team_score in all_score_list:
 				f.write(bytes(",".join(team_score) + "\n",encoding="utf-8"))
+
