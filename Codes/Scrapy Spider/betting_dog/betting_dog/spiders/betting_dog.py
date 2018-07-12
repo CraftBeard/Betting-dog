@@ -63,6 +63,8 @@ class BettingDogSpider(scrapy.Spider):
 
 		exec(crawl_teams) # exec直接生成arrTeam
 
+		print(arrTeam)
+
 		for team in arrTeam['a']:
 			teams[team[0]] = team[1]
 
@@ -81,11 +83,13 @@ class BettingDogSpider(scrapy.Spider):
 				time = match[3] #时间
 				home_red = match[18] #主队红牌
 				home_team =  teams.get(match[4])#主队名称
+				home_team_id =  match[4]#主队id
 				home_rank = match[8] #主队名次
 				score = match[6] #比分
 				score_half = match[7] #半场比分
 				away_red = match[19] #客队红牌
 				away_team =  teams.get(match[5]) #客队名称
+				away_team_id =  match[5] #客队id
 				away_rank = match[9] #客队名次
 
 				tmp = []
@@ -94,18 +98,20 @@ class BettingDogSpider(scrapy.Spider):
 				tmp.append(str(time))
 				tmp.append(str(home_red))
 				tmp.append(str(home_team))
+				tmp.append(str(home_team_id))
 				tmp.append(str(home_rank))
 				tmp.append(str(score))
 				tmp.append(str(score_half))
 				tmp.append(str(away_red))
 				tmp.append(str(away_team))
+				tmp.append(str(away_team_id))
 				tmp.append(str(away_rank))
 
 				round_list.append(tmp)
 			all_round_list.append(round_list)
 
 		with open(CSV_PATH_EVENTS,'ab+') as f:
-			title = ['赛季','轮次','时间','主队红牌数','主队名称','主队上轮名次','比分','半场比分','客队红牌数','客队名称','客队上轮名次']
+			title = ['赛季','轮次','时间','主队红牌数','主队名称','主队ID','主队上轮名次','比分','半场比分','客队红牌数','客队名称','客队ID','客队上轮名次']
 			f.write(bytes(",".join(title)+"\n",encoding="utf-8"))
 			for rnd in all_round_list:
 				for match in rnd:
@@ -121,6 +127,7 @@ class BettingDogSpider(scrapy.Spider):
 		for team in totalScore['a']:
 			rank = team[1] # 排名
 			team_name = teams.get(team[2]) # 球队名称
+			team_id = team[2] # 球队ID
 			red_card = team[3] # 红牌数量
 			games = team[4] # 比赛数量
 			games_win = team[5] # 胜场数
@@ -140,6 +147,7 @@ class BettingDogSpider(scrapy.Spider):
 			score_list.append(str(season))
 			score_list.append(str(rank))
 			score_list.append(str(team_name))
+			score_list.append(str(team_id))
 			score_list.append(str(red_card))
 			score_list.append(str(games))
 			score_list.append(str(games_win))
@@ -158,7 +166,7 @@ class BettingDogSpider(scrapy.Spider):
 			all_score_list.append(score_list)
 
 		with open(CSV_PATH_SCORE,'ab+') as f:
-			title = ['赛季','排名','球队名称','红牌数量','比赛数量','胜场数','平场数','负场数','进球数','丢球数','净胜球', '胜率', '平率', '负率', '场均进球', '场均丢球', '积分']
+			title = ['赛季','排名','球队名称','球队ID','红牌数量','比赛数量','胜场数','平场数','负场数','进球数','丢球数','净胜球', '胜率', '平率', '负率', '场均进球', '场均丢球', '积分']
 			f.write(bytes(",".join(title)+"\n",encoding="utf-8"))
 			for team_score in all_score_list:
 				f.write(bytes(",".join(team_score) + "\n",encoding="utf-8"))
@@ -176,6 +184,7 @@ class BettingDogSpider(scrapy.Spider):
 		for team in homeScore['a']:
 			rank = team[0] # 排名
 			team_name = teams.get(team[1]) # 球队名称
+			team_id = team[1] # 球队ID
 			games = team[2] # 比赛数量
 			games_win = team[3] # 胜场数
 			games_draw = team[4] # 平场数
@@ -194,6 +203,7 @@ class BettingDogSpider(scrapy.Spider):
 			score_list.append(str(season))
 			score_list.append(str(rank))
 			score_list.append(str(team_name))
+			score_list.append(str(team_id))
 			score_list.append(str(games))
 			score_list.append(str(games_win))
 			score_list.append(str(games_draw))
@@ -211,7 +221,7 @@ class BettingDogSpider(scrapy.Spider):
 			all_score_list.append(score_list)
 
 		with open(CSV_PATH_SCORE_HOME,'ab+') as f:
-			title = ['赛季','排名','球队名称','比赛数量','胜场数','平场数','负场数','进球数','丢球数','净胜球', '胜率', '平率', '负率', '场均进球', '场均丢球', '积分']
+			title = ['赛季','排名','球队名称','球队ID','比赛数量','胜场数','平场数','负场数','进球数','丢球数','净胜球', '胜率', '平率', '负率', '场均进球', '场均丢球', '积分']
 			f.write(bytes(",".join(title)+"\n",encoding="utf-8"))
 			for team_score in all_score_list:
 				f.write(bytes(",".join(team_score) + "\n",encoding="utf-8"))
@@ -229,6 +239,7 @@ class BettingDogSpider(scrapy.Spider):
 		for team in guestScore['a']:
 			rank = team[0] # 排名
 			team_name = teams.get(team[1]) # 球队名称
+			team_id = team[1] # 球队ID
 			games = team[2] # 比赛数量
 			games_win = team[3] # 胜场数
 			games_draw = team[4] # 平场数
@@ -247,6 +258,7 @@ class BettingDogSpider(scrapy.Spider):
 			score_list.append(str(season))
 			score_list.append(str(rank))
 			score_list.append(str(team_name))
+			score_list.append(str(team_id))
 			score_list.append(str(games))
 			score_list.append(str(games_win))
 			score_list.append(str(games_draw))
@@ -264,7 +276,7 @@ class BettingDogSpider(scrapy.Spider):
 			all_score_list.append(score_list)
 
 		with open(CSV_PATH_SCORE_AWAY,'ab+') as f:
-			title = ['赛季','排名','球队名称','比赛数量','胜场数','平场数','负场数','进球数','丢球数','净胜球', '胜率', '平率', '负率', '场均进球', '场均丢球', '积分']
+			title = ['赛季','排名','球队名称','球队ID','比赛数量','胜场数','平场数','负场数','进球数','丢球数','净胜球', '胜率', '平率', '负率', '场均进球', '场均丢球', '积分']
 			f.write(bytes(",".join(title)+"\n",encoding="utf-8"))
 			for team_score in all_score_list:
 				f.write(bytes(",".join(team_score) + "\n",encoding="utf-8"))

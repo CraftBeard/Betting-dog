@@ -72,8 +72,9 @@ class BettingDog2_Spider(scrapy.Spider):
 		#print(values_total)
 
 		for player_value in values_total:
-			player_id = player_value[0]
+			player_id = player_value[0] #球员ID
 			player_name = players.get(str(player_id))[0][0] #球员
+			team_id = players.get(str(player_id))[1] #球队ID
 			game_num = player_value[1] #出场
 			sub_num = player_value[2] #替补
 			game_time = player_value[3] #出场时间
@@ -90,6 +91,7 @@ class BettingDog2_Spider(scrapy.Spider):
 			player_list.append(str(season))
 			player_list.append(str(player_id))
 			player_list.append(str(player_name))
+			player_list.append(str(team_id))
 			player_list.append(str(game_num))
 			player_list.append(str(sub_num))
 			player_list.append(str(game_time))
@@ -102,14 +104,11 @@ class BettingDog2_Spider(scrapy.Spider):
 			player_list.append(str(mvp_num))
 			player_list.append(str(score))
 
-			if player_list[0] in ('梅西', 'C.罗纳尔多'):
-				print(player_list)
-
 			all_players_list.append(player_list)
 
 
 		with open(CSV_PATH_PLAYER_RANK,'ab+') as f:
-			title = ['赛季','球员ID','球员','出场','替补','出场总时长','运动战进球','点球','总进球数','射门','射正','被侵犯次数', '最佳球员次数','评分']
+			title = ['赛季','球员ID','球员','球队ID','出场','替补','出场总时长','运动战进球','点球','总进球数','射门','射正','被侵犯次数', '最佳球员次数','评分']
 			f.write(bytes(",".join(title)+"\n",encoding="utf-8"))
 			for player_list in all_players_list:
 				f.write(bytes(",".join(player_list) + "\n",encoding="utf-8"))
